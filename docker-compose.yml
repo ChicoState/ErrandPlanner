@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    volumes:
+       - .:/code
+    ports:
+       - 8000:8000
+    command: python /code/src/manage.py runserver 0.0.0.0:8000
