@@ -1,0 +1,11 @@
+{% load django_bootstrap5 %}
+
+{% extends 'app/bootstrap.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}
