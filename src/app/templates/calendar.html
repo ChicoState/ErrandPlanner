@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row align-items-start">
+        <div class="col"> {# column for times #}
+        </div>
+        {% for d in schedule  %}
+        <div class="{% if  d == schedule.0 %} border-start {% endif %}border-end col">
+            <div class="h5 row-2 border-bottom"> 
+                {{ d.day|slice:"0:3" }} {# Slicing to abbreviate days #}{{d.date}} 
+            </div>
+            {% for e in d.events  %} <div class="bg-light"> {{ e }} </div> {% endfor %}
+        </div>
+        {% endfor %}    
+    </div>
+{% endblock %}
