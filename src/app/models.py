@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-# 
+# Errand model
 class Errand(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id = models.SmallIntegerField(primary_key=True)
@@ -14,9 +14,10 @@ class Errand(models.Model):
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
     zip = models.SmallIntegerField() # more for last 4?
-    # time variables
-    start = models.DateTimeField(default=0) # needs to change
-    end = models.DateTimeField(default=0) # needs to change
-    duration = models.DurationField(default=60) # is this the value we want??
+    # time variables 
+    # can be left blank (alternatively we could assign a default value)
+    start = models.DateTimeField(blank=True)
+    end = models.DateTimeField(blank=True)
+    duration = models.DurationField(blank=True) 
     class Meta:
         unique_together = ("user", "id")

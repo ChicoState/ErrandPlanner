@@ -13,7 +13,7 @@ def validate_location(value):
 class ErrandForm(forms.Form):
     title=forms.CharField(min_length=1, max_length=20, strip=True, label="Title",
         widget=forms.TextInput(attrs={'placeholder':'Grocery Shop', 'style':'width:60px'}))
-    priority=forms.CharField(min_length=0, max_length=1, strip=True, label="Priority",
+    priority=forms.IntegerField(min_length=0, max_length=1, strip=True, label="Priority",
         widget=forms.TextInput(attrs={'placeholder':'1', 'style':'width:60px'}),
         validators=[validators.MaxLengthValidator(1)])
     streetaddr=forms.CharField(min_length=0, max_length=20, strip=True, label="Street Address",
@@ -25,7 +25,7 @@ class ErrandForm(forms.Form):
     state=forms.CharField(min_length=2, max_length=2, strip=True, label="State",
         widget=forms.TextInput(attrs={'placeholder':'CA', 'style':'width:60px'}),
         validators=[validators.MaxLengthValidator(2)])
-    zip=forms.CharField(min_length=5, max_length=10, strip=True, label="Zip Code",
+    zip=forms.IntegerField(min_length=5, max_length=10, strip=True, label="Zip Code",
         widget=forms.TextInput(attrs={'placeholder':'85358', 'style':'width:60px'}),
         validators=[validators.MaxLengthValidator(10), validators.MinLengthValidator(3)])
     duration=forms.CharField(min_length=2, max_length=2, strip=True, label="Duration Est.",
