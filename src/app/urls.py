@@ -6,5 +6,4 @@ from . import views
 urlpatterns = [
     path('join/', views.join),
     path('login/', views.user_login),
-    path('errands/', app_views.errands)
 ]
