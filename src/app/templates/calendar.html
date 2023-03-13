@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row align-items-start">
+        {% for d in schedule  %}
+        <div class="col">
+            <div class="h5 row-2 border-bottom"> 
+                {{ d.day|slice:"0:3" }} {# Slicing to abbreviate days #}{{d.date}} 
+            </div>
+            {% for e in d.events  %}
+                <div class="text-bg-secondary m-2 p-1"> 
+                    <div> {{ e.start}}  - {{ e.end }}  </div>
+                    <div>{{ e.name }} </div> 
+                </div>
+            {% endfor %}
+        </div>
+        {% endfor %}    
+    </div>
+{% endblock %}
