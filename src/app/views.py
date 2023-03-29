@@ -99,13 +99,13 @@ def calendar(request):
 
     #get all of the events that would be in the current week
     
-    sunday.events = models.ErrandModel.objects.filter( end__range=(sunday.date, (monday.date)))
-    monday.events = models.ErrandModel.objects.filter( end__range=(monday.date, (tuesday.date)))
-    tuesday.events = models.ErrandModel.objects.filter( end__range=(tuesday.date, (wednesday.date)))
-    wednesday.events = models.ErrandModel.objects.filter( end__range=(wednesday.date, (thursday.date)))
-    thursday.events = models.ErrandModel.objects.filter( end__range=(thursday.date, (friday.date)))
-    friday.events = models.ErrandModel.objects.filter( end__range=(friday.date, (saturday.date)))
-    saturday.events = models.ErrandModel.objects.filter( end__range=(saturday.date, (sunday.date + timedelta(days = 7))))
+    sunday.events = models.Errand.objects.filter( end__range=(sunday.date, (monday.date)))
+    monday.events = models.Errand.objects.filter( end__range=(monday.date, (tuesday.date)))
+    tuesday.events = models.Errand.objects.filter( end__range=(tuesday.date, (wednesday.date)))
+    wednesday.events = models.Errand.objects.filter( end__range=(wednesday.date, (thursday.date)))
+    thursday.events = models.Errand.objects.filter( end__range=(thursday.date, (friday.date)))
+    friday.events = models.Errand.objects.filter( end__range=(friday.date, (saturday.date)))
+    saturday.events = models.Errand.objects.filter( end__range=(saturday.date, (sunday.date + timedelta(days = 7))))
 
     #place each day into the schedule
     schedule = [ sunday, monday, tuesday, wednesday, thursday, friday, saturday ]

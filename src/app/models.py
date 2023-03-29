@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 # Errand model
-class ErrandModel(models.Model):
+class Errand(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id = models.SmallIntegerField(primary_key=True)
     title = models.CharField(max_length=20)
