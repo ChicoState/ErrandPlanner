@@ -63,14 +63,14 @@ def errands(request):
         # User has deleted an errand
         id = request.GET["delete"]
         Errand.objects.filter(id=id).delete()
-        return redirect("/errand/")
+        return redirect("/errands/")
     else:
         # Simply load errands for rendering
         table_data = Errand.objects.filter(user=request.user)
         page_data = { "table_data": table_data }
         return render(request, 'errands.html', page_data)
 
-
+# Add errand
 @login_required(login_url='/login/')
 def addErrand(request):
 	if (request.method == "POST"):
@@ -87,17 +87,18 @@ def addErrand(request):
 				duration = add_form.cleaned_data["duration"]
 				user = User.objects.get(id=request.user.id)
 				Errand(user=user, title=title, priority=priority, streetaddr=streetaddr, city=city, state=state, zip=zip, duration=duration).save()
-				return redirect("/errand/")
+				return redirect("/errands/")
 			else:
 				context = { "form_data": add_form }
-				return render(request, 'errand/addErrand.html', context)
+				return render(request, 'addErrand.html', context)
 		else:
 			# Cancel
-			return redirect("/errand/")
+			return redirect("/errands/")
 	else:
 		context = { "form_data": ErrandForm() }
-	return render(request, 'errand/addErrand.html', context)
+	return render(request, 'addErrand.html', context)
 
+# Edit errand
 @login_required(login_url='/login/')
 def editErrand(request, id):
 	if (request.method == "GET"):
@@ -105,7 +106,7 @@ def editErrand(request, id):
 		errand = Errand.objects.get(id=id)
 		form = ErrandForm(instance=errand)
 		context = {"form_data": form}
-		return render(request, 'errand/editErrand.html', context)
+		return render(request, 'editErrand.html', context)
 	elif (request.method == "POST"):
 		# Process form submission
 		if ("edit" in request.POST):
@@ -115,10 +116,10 @@ def editErrand(request, id):
 				errand.user = request.user
 				errand.id = id
 				errand.save()
-				return redirect("/errand/")
+				return redirect("/errands/")
 			else:
 				context = { "form_data": form }
-				return render(request, 'errand/addErrand.html', context)
+				return render(request, 'addErrand.html', context)
 		else:
 			#Cancel
-			return redirect("/errand/")
+			return redirect("/errands/")

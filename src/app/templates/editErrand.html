@@ -10,7 +10,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <a href="/errand/" class="btn btn-secondary">Cancel</a>
+                    <a href="/errands/" class="btn btn-secondary">Cancel</a>
                     <input type="submit" class="btn btn-primary" name="edit" value="Save">
                 </td>
             </tr>
@@ -18,37 +18,3 @@
     </form>
 </div>
 {% endblock %}
-
-
-<!-- 
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <title>Edit Errand</title>
-    {% include "bootstrap.html" %}
-    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet" />
-</head>
-
-<body>
-    {% include "nav.html" %}
-    <div class="jumbotron">
-        <h1>Edit Errand</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <table>
-                {{ form_data.as_table }}
-                <tr>
-                    <td></td>
-                    <td>
-                        <a href="/errand/" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="edit" value="Save">
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</body>
-
-</html> 
--->

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    {% load static %}
+    <script src="{% static 'errands.js' %}"></script>
+    <link rel="stylesheet" href="{%static 'errands.css' %}"/>
+</head>
+<body>
+<div class="jumbotron">
+    <h1>Errands</h1>
+    {% if not table_data %}
+    </p>There are no errands to display.</p>
+    {% else %}
+    <table class="table table-striped" border="1">
+        <tr>
+            <th>Errand</th>
+            <th>Priority</th>
+            <th>Address</th>
+            <th>Duration</th>
+            <th></th>
+        </tr>
+        {% for row in table_data %}
+            <tr>
+                <td>{{ row.title }}</td>
+                <td>{{ row.priority }}</td>
+                <td>{{ row.streetaddr }} <br> {{ row.city }}, {{ row.state }} {{ zip }}</td>
+                <td>{{ row.duration }} min</td>
+                <td>
+                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
+                    <a class="btn btn-primary" href="#" onclick="confirmDeleteModal({{ row.id }})">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <form method="GET" action="/errands/add/">
+        <input type="submit" class="btn btn-primary" value="Add Errand">
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="deleteModal" class="modal fade" role='dialog'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Delete Errand</h4>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete this Errand?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <span id='deleteButton'></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal ends here--->
+</body>
+{% endblock %}
