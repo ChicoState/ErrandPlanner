@@ -1,11 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-<<<<<<< HEAD
 # Create your models here.
 
 # Errand model
-class Errand(models.Model):
+class ErrandModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id = models.SmallIntegerField(primary_key=True)
     title = models.CharField(max_length=20)
@@ -22,7 +21,3 @@ class Errand(models.Model):
     duration = models.DurationField(blank=True) 
     class Meta:
         unique_together = ("user", "id")
-=======
-##Create your models here.
-
->>>>>>> calendarBackend
