@@ -3,8 +3,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
+from datetime import datetime, timedelta
+from . import models
 from app.forms import JoinForm, LoginForm, ErrandForm
-from app.models import Errand
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -56,6 +57,60 @@ def user_login(request):
         #Nothing has been provided for username or password.
         return render(request, 'login.html', {"login_form": LoginForm}) 
 
+#Calendar Backend
+class Date:
+    day = ""
+    date = datetime.now() #default to right now as a time field. this will be updated before display
+    events = [] #holds the day's events
+
+def calendar(request):
+    #get today
+    today = datetime.today()
+    todaydate = today.weekday()
+
+    #get the first day in the week
+    monday = Date()
+    monday.date = today - timedelta(days = todaydate)
+    monday.day = "Monday"
+    monday.date = monday.date.replace(hour = 0, minute = 0, second = 0)
+    
+    #use the first day to get the other days in the week
+    tuesday = Date()
+    wednesday = Date()
+    thursday = Date()
+    friday = Date()
+    saturday = Date()
+    sunday = Date()
+    sunday.date = monday.date - timedelta(days = 1)
+    sunday.day = "Sunday"
+    tuesday.date = monday.date + timedelta(days = 1)
+    tuesday.day = "Tuesday"
+    wednesday.date = monday.date + timedelta(days = 2)
+    wednesday.day = "Wednesday"
+    thursday.date = monday.date + timedelta(days = 3)
+    thursday.day = "Thursday"
+    friday.date = monday.date + timedelta(days = 4)
+    friday.day = "Friday"
+    saturday.date = monday.date + timedelta(days = 5)
+    saturday.day = "Saturday"
+
+    #get all of the events that would be in the current week
+    
+    sunday.events = models.Errand.objects.filter( end__range=(sunday.date, (monday.date)))
+    monday.events = models.Errand.objects.filter( end__range=(monday.date, (tuesday.date)))
+    tuesday.events = models.Errand.objects.filter( end__range=(tuesday.date, (wednesday.date)))
+    wednesday.events = models.Errand.objects.filter( end__range=(wednesday.date, (thursday.date)))
+    thursday.events = models.Errand.objects.filter( end__range=(thursday.date, (friday.date)))
+    friday.events = models.Errand.objects.filter( end__range=(friday.date, (saturday.date)))
+    saturday.events = models.Errand.objects.filter( end__range=(saturday.date, (sunday.date + timedelta(days = 7))))
+
+    #place each day into the schedule
+    schedule = [ sunday, monday, tuesday, wednesday, thursday, friday, saturday ]
+    
+    context = {
+        'schedule':schedule,
+    }
+    return render(request, "calendar.html", context)
 
 @login_required(login_url='/login/')
 def errands(request):
