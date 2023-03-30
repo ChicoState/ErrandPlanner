@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Add Errand</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form_data.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <a href="/errands/" class="btn btn-secondary">Cancel</a>
+                    <input type="submit" class="btn btn-primary" name="add" value="Add Errand">
+                </td>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% endblock %}
