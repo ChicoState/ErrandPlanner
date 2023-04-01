@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <body>
+        <div class="container">
+            <div class = "jumbotron">
+                <h1>Login</h1>
+                <form action="/login/" method="POST">{% csrf_token %}
+                    <table>
+                        {{ login_form.as_table }}
+                        <tr><td>
+                            <input type="submit" class="btn btn-primary" value = "Login"/>
+                        </td></tr>
+                    </table>
+                </form>
+            </div>
+        </div> 
+{% endblock %}
