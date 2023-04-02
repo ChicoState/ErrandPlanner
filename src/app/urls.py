@@ -8,6 +8,7 @@ urlpatterns = [
     path('join/', views.join),
     path('login/', views.user_login),
     path('calendar/', views.calendar),
+    path('calendar/add/', views.addEvent),
     path('', views.errands),
     path('errands/', views.errands),
     path('errands/add/', views.addErrand),
