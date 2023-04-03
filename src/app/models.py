@@ -18,11 +18,11 @@ class Event(models.Model):
     start = models.DateTimeField(blank=True, null=True)
     duration = models.IntegerField(blank=True) 
     # Used to determine if a modell is an errand or a regular event
-    errand = models.BooleanField(default = False)
+    is_errand = models.BooleanField(default = False)
     scheduled = models.BooleanField(default = True)
 
     def __str__(self):
-        strRep = ("Errand: " if self.errand else "Event: ") + self.title + " (" + self.user.username + ")"
+        strRep = ("Errand: " if self.is_errand else "Event: ") + self.title + " (" + self.user.username + ")"
         return strRep
 
     class Meta:
