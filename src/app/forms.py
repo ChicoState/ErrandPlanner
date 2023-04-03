@@ -1,7 +1,7 @@
 from django import forms
 from django.core import validators
 from django.contrib.auth.models import User
-from app.models import Errand
+from app.models import Event
 
 
 
@@ -31,25 +31,48 @@ def validate_location(value):
 # ~~ validators still need work ~~
 class ErrandForm(forms.ModelForm):
     title=forms.CharField(max_length=20, strip=True, label="Title",
-        widget=forms.TextInput(attrs={'placeholder':'Grocery Shop', 'style':'width:60px'}))
+        widget=forms.TextInput(attrs={'placeholder':'Grocery Shop'}))
     priority=forms.IntegerField(label="Priority",
-        widget=forms.TextInput(attrs={'placeholder':'1', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':'1'}),
         validators=[])
     streetaddr=forms.CharField(max_length=20, strip=True, label="Street Address",
-        widget=forms.TextInput(attrs={'placeholder':'1234 Sesame Street', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':'1234 Sesame Street'}),
         validators=[validators.MinLengthValidator(6)])
     city=forms.CharField(max_length=20, strip=True, label="City",
-        widget=forms.TextInput(attrs={'placeholder':'Sunnyville', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':'Sunnyville'}),
         validators=[validators.MinLengthValidator(3)])
     state=forms.CharField(max_length=2, strip=True, label="State",
-        widget=forms.TextInput(attrs={'placeholder':'CA', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':'CA'}),
         validators=[validators.MaxLengthValidator(2)])
     zip=forms.IntegerField(label="Zip Code",
-        widget=forms.TextInput(attrs={'placeholder':'85358', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':'85358'}),
         validators=[])
     duration=forms.IntegerField(label="Duration Est.",
-        widget=forms.TextInput(attrs={'placeholder':'', 'style':'width:60px'}),
+        widget=forms.TextInput(attrs={'placeholder':''}),
         validators=[]) # this needs to change depending on how date/time are handled
     class Meta():
-        model = Errand
+        model = Event
         fields = ('title', 'priority', 'streetaddr', 'city', 'state', 'zip', 'duration')
+
+class EventForm(forms.ModelForm):
+    title=forms.CharField(max_length=20, strip=True, label="Title",
+        widget=forms.TextInput(attrs={'placeholder':'Class'}))
+    streetaddr=forms.CharField(max_length=20, strip=True, label="Street Address",
+        widget=forms.TextInput(attrs={'placeholder':'1234 Sesame Street'}),
+        validators=[validators.MinLengthValidator(6)])
+    city=forms.CharField(max_length=20, strip=True, label="City",
+        widget=forms.TextInput(attrs={'placeholder':'Sunnyville'}),
+        validators=[validators.MinLengthValidator(3)])
+    state=forms.CharField(max_length=2, strip=True, label="State",
+        widget=forms.TextInput(attrs={'placeholder':'CA'}),
+        validators=[validators.MaxLengthValidator(2)])
+    zip=forms.IntegerField(label="Zip Code",
+        widget=forms.TextInput(attrs={'placeholder':'85358'}),
+        validators=[])
+    start =forms.DateTimeField(label="Start", widget=forms.DateTimeInput(attrs={'placeholder': 'm/d/y H:M'}),
+        validators=[]) # this needs to change depending on how date/time are handled
+    duration =forms.IntegerField(label="Duration",
+        validators=[]) # this needs to change depending on how date/time are handled
+    class Meta():
+        model = Event
+        fields = ('title', 'streetaddr', 'city', 'state', 'zip', 'start', 'duration')

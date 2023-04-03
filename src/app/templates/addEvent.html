@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Add Event</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form_data }}
+        <input type="submit" class="btn btn-primary" name="add" value="Add Event">
+    </form>
+</div>
+{% endblock %}

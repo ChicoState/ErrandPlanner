@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from . import models
-from app.forms import JoinForm, LoginForm, ErrandForm
+from app.forms import JoinForm, LoginForm, ErrandForm, EventForm
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -57,52 +57,83 @@ def user_login(request):
         #Nothing has been provided for username or password.
         return render(request, 'login.html', {"login_form": LoginForm}) 
 
-#Calendar Backend
+## Calendar Views ##
+
+@login_required()
+def addEvent(request):
+    if (request.method == "POST"):
+        if ("add" in request.POST):
+            # User has added an errand
+            add_form = EventForm(request.POST)
+            if (add_form.is_valid()):
+                title = add_form.cleaned_data["title"]
+                streetaddr = add_form.cleaned_data["streetaddr"]
+                city = add_form.cleaned_data["city"]
+                state = add_form.cleaned_data["state"]
+                zip = add_form.cleaned_data["zip"]
+                start = add_form.cleaned_data["start"]
+                duration = add_form.cleaned_data["duration"]
+                user = User.objects.get(id=request.user.id)
+                models.Event(user=user, title=title, priority = -1, streetaddr=streetaddr, city=city, state=state, zip=zip, start = start, duration=duration).save()
+                return redirect("/calendar/")
+            else:
+                context = { "form_data": add_form }
+                return render(request, 'addEvent.html', context)
+        else:
+        # Cancel
+            return redirect("/calendar/")
+    else:
+        context = { "form_data": EventForm() }
+        return render(request, 'addEvent.html', context)
+
 class Date:
     day = ""
     date = datetime.now() #default to right now as a time field. this will be updated before display
     events = [] #holds the day's events
 
+@login_required()
 def calendar(request):
+
     #get today
     today = datetime.today()
-    todaydate = today.weekday()
+    todaydate = today.weekday() # gets today's date 0-6 mon-sun
+    todaydate = todaydate + 1 if todaydate < 6 else 0
 
     #get the first day in the week
-    monday = Date()
-    monday.date = today - timedelta(days = todaydate)
-    monday.day = "Monday"
-    monday.date = monday.date.replace(hour = 0, minute = 0, second = 0)
+    sunday = Date()
+    sunday.date = today - timedelta(days = todaydate)
+    sunday.day = "Sunday"
+    sunday.date = sunday.date.replace(hour = 0, minute = 0, second = 0)
     
     #use the first day to get the other days in the week
+    monday = Date()
     tuesday = Date()
     wednesday = Date()
     thursday = Date()
     friday = Date()
     saturday = Date()
-    sunday = Date()
-    sunday.date = monday.date - timedelta(days = 1)
-    sunday.day = "Sunday"
-    tuesday.date = monday.date + timedelta(days = 1)
+    monday.date = monday.date + timedelta(days = 1)
+    monday.day = "Monday"
+    tuesday.date = monday.date + timedelta(days = 2)
     tuesday.day = "Tuesday"
-    wednesday.date = monday.date + timedelta(days = 2)
+    wednesday.date = monday.date + timedelta(days = 3)
     wednesday.day = "Wednesday"
-    thursday.date = monday.date + timedelta(days = 3)
+    thursday.date = monday.date + timedelta(days = 4)
     thursday.day = "Thursday"
-    friday.date = monday.date + timedelta(days = 4)
+    friday.date = monday.date + timedelta(days = 5)
     friday.day = "Friday"
-    saturday.date = monday.date + timedelta(days = 5)
+    saturday.date = monday.date + timedelta(days = 6)
     saturday.day = "Saturday"
 
     #get all of the events that would be in the current week
     
-    sunday.events = models.Errand.objects.filter( end__range=(sunday.date, (monday.date)))
-    monday.events = models.Errand.objects.filter( end__range=(monday.date, (tuesday.date)))
-    tuesday.events = models.Errand.objects.filter( end__range=(tuesday.date, (wednesday.date)))
-    wednesday.events = models.Errand.objects.filter( end__range=(wednesday.date, (thursday.date)))
-    thursday.events = models.Errand.objects.filter( end__range=(thursday.date, (friday.date)))
-    friday.events = models.Errand.objects.filter( end__range=(friday.date, (saturday.date)))
-    saturday.events = models.Errand.objects.filter( end__range=(saturday.date, (sunday.date + timedelta(days = 7))))
+    sunday.events = models.Event.objects.filter(user = request.user, start__range=(sunday.date, (monday.date)))
+    monday.events = models.Event.objects.filter(user = request.user,start__range=(monday.date, (tuesday.date)))
+    tuesday.events = models.Event.objects.filter(user = request.user,start__range=(tuesday.date, (wednesday.date)))
+    wednesday.events = models.Event.objects.filter(user = request.user,start__range=(wednesday.date, (thursday.date)))
+    thursday.events = models.Event.objects.filter(user = request.user,start__range=(thursday.date, (friday.date)))
+    friday.events = models.Event.objects.filter(user = request.user,start__range=(friday.date, (saturday.date)))
+    saturday.events = models.Event.objects.filter(user = request.user,start__range=(saturday.date, (sunday.date + timedelta(days = 7))))
 
     #place each day into the schedule
     schedule = [ sunday, monday, tuesday, wednesday, thursday, friday, saturday ]
@@ -112,21 +143,23 @@ def calendar(request):
     }
     return render(request, "calendar.html", context)
 
-@login_required(login_url='/login/')
+## Errand Views ##
+
+@login_required()
 def errands(request):
     if (request.method == "GET" and "delete" in request.GET):
         # User has deleted an errand
         id = request.GET["delete"]
-        Errand.objects.filter(id=id).delete()
+        models.Event.objects.filter(id=id).delete()
         return redirect("/errands/")
     else:
         # Simply load errands for rendering
-        table_data = Errand.objects.filter(user=request.user)
+        table_data = models.Event.objects.filter(is_errand = True, user=request.user)
         page_data = { "table_data": table_data }
         return render(request, 'errands.html', page_data)
 
 # Add errand
-@login_required(login_url='/login/')
+@login_required()
 def addErrand(request):
 	if (request.method == "POST"):
 		if ("add" in request.POST):
@@ -141,7 +174,7 @@ def addErrand(request):
 				zip = add_form.cleaned_data["zip"]
 				duration = add_form.cleaned_data["duration"]
 				user = User.objects.get(id=request.user.id)
-				Errand(user=user, title=title, priority=priority, streetaddr=streetaddr, city=city, state=state, zip=zip, duration=duration).save()
+				models.Event(user=user, title=title, priority=priority, streetaddr=streetaddr, city=city, state=state, zip=zip, duration=duration, is_errand = True, scheduled = False).save()
 				return redirect("/errands/")
 			else:
 				context = { "form_data": add_form }
@@ -158,7 +191,7 @@ def addErrand(request):
 def editErrand(request, id):
 	if (request.method == "GET"):
 		# Load Errand Entry Form with current model data.
-		errand = Errand.objects.get(id=id)
+		errand = models.Event.objects.get(id=id)
 		form = ErrandForm(instance=errand)
 		context = {"form_data": form}
 		return render(request, 'editErrand.html', context)
