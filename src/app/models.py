@@ -12,17 +12,23 @@ class Event(models.Model):
     streetaddr = models.CharField(max_length=30)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
-    zip = models.SmallIntegerField() # more for last 4?
-    # time variables 
+    zip = models.SmallIntegerField()  # more for last 4?
+    # time variables
     # can be left blank (alternatively we could assign a default value)
     start = models.DateTimeField(blank=True, null=True)
-    duration = models.IntegerField(blank=True) 
+    duration = models.IntegerField(blank=True)
     # Used to determine if a modell is an errand or a regular event
-    is_errand = models.BooleanField(default = False)
-    scheduled = models.BooleanField(default = True)
+    is_errand = models.BooleanField(default=False)
+    scheduled = models.BooleanField(default=True)
 
     def __str__(self):
-        strRep = ("Errand: " if self.is_errand else "Event: ") + self.title + " (" + self.user.username + ")"
+        strRep = (
+            ("Errand: " if self.is_errand else "Event: ")
+            + self.title
+            + " ("
+            + self.user.username
+            + ")"
+        )
         return strRep
 
     class Meta:

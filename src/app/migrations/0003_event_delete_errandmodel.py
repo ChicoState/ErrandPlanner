@@ -6,34 +6,47 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('app', '0002_rename_errand_errandmodel'),
+        ("app", "0002_rename_errand_errandmodel"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=20)),
-                ('priority', models.SmallIntegerField()),
-                ('streetaddr', models.CharField(max_length=30)),
-                ('city', models.CharField(max_length=20)),
-                ('state', models.CharField(max_length=2)),
-                ('zip', models.SmallIntegerField()),
-                ('start', models.DateTimeField(blank=True, null=True)),
-                ('duration', models.IntegerField(blank=True)),
-                ('errand', models.BooleanField(default=False)),
-                ('scheduled', models.BooleanField(default=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=20)),
+                ("priority", models.SmallIntegerField()),
+                ("streetaddr", models.CharField(max_length=30)),
+                ("city", models.CharField(max_length=20)),
+                ("state", models.CharField(max_length=2)),
+                ("zip", models.SmallIntegerField()),
+                ("start", models.DateTimeField(blank=True, null=True)),
+                ("duration", models.IntegerField(blank=True)),
+                ("errand", models.BooleanField(default=False)),
+                ("scheduled", models.BooleanField(default=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('user', 'id')},
+                "unique_together": {("user", "id")},
             },
         ),
         migrations.DeleteModel(
-            name='ErrandModel',
+            name="ErrandModel",
         ),
     ]
