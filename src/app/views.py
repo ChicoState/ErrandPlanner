@@ -188,8 +188,8 @@ def errands(request):
     else:
         # Simply load errands for rendering
         table_data = models.Event.objects.filter(is_errand=True, user=request.user)
-        page_data = {"table_data": table_data}
-        return render(request, "errands.html", page_data)
+        context = {"table_data": table_data}
+        return render(request, "errands.html", context)
 
 
 # Add errand
@@ -218,7 +218,7 @@ def addErrand(request):
                     zip=zip,
                     duration=duration,
                     is_errand=True,
-                    scheduled=False,
+                    scheduled=False
                 ).save()
                 return redirect("/errands/")
             else:
@@ -249,6 +249,7 @@ def editErrand(request, id):
                 errand = form.save(commit=False)
                 errand.user = request.user
                 errand.id = id
+                errand.is_errand = True
                 errand.save()
                 return redirect("/errands/")
             else:
