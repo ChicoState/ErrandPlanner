@@ -22,13 +22,13 @@ def join(request):
             return redirect("/")
         else:
             # Form invalid, print errors to console
-            page_data = {"join_form": join_form}
-            return render(request, "join.html", page_data)
+            context = {"join_form": join_form}
+            return render(request, "join.html", context)
 
     else:
         join_form = JoinForm()
-        page_data = {"join_form": join_form}
-        return render(request, "join.html", page_data)
+        context = {"join_form": join_form}
+        return render(request, "join.html", context)
 
 
 def user_login(request):
@@ -188,8 +188,8 @@ def errands(request):
     else:
         # Simply load errands for rendering
         table_data = models.Event.objects.filter(is_errand=True, user=request.user)
-        page_data = {"table_data": table_data}
-        return render(request, "errands.html", page_data)
+        context = {"table_data": table_data}
+        return render(request, "errands.html", context)
 
 
 # Add errand
