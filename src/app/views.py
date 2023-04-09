@@ -7,8 +7,10 @@ from datetime import datetime, timedelta
 from . import models
 from app.forms import JoinForm, LoginForm, ErrandForm, EventForm
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Create your views here.
+
 
 def join(request):
     if request.method == "POST":
@@ -21,13 +23,12 @@ def join(request):
             return redirect("/")
         else:
             # Form invalid, print errors to console
-            page_data = {"join_form": join_form}
-            return render(request, "join.html", page_data)
-
+            context = {"join_form": join_form}
+            return render(request, "join.html", context)
     else:
         join_form = JoinForm()
-        page_data = {"join_form": join_form}
-        return render(request, "join.html", page_data)
+        context = {"join_form": join_form}
+        return render(request, "join.html", context)
 
 
 def user_login(request):
@@ -51,7 +52,8 @@ def user_login(request):
                 return HttpResponse("Your account is not active.")
         else:
             print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(username, password))
+            print("They used username: {} and password: {}".format(
+                username, password))
             return render(request, "login.html", {"login_form": LoginForm})
     else:
         # Nothing has been provided for username or password.
@@ -179,17 +181,23 @@ def calendar(request):
 
 @login_required()
 def errands(request):
-    if request.method == "GET" and "delete" in request.GET:
-        # User has deleted an errand
-        id = request.GET["delete"]
-        models.Event.objects.filter(id=id).delete()
-        return redirect("/errands/")
-    else:
-        # Simply load errands for rendering
-        table_data = models.Event.objects.filter(is_errand=True, user=request.user)
-        page_data = {"table_data": table_data}
-        return render(request, "errands.html", page_data)
+    # if request.method == "GET" and "delete" in request.GET:
+    #     # User has deleted an errand
+    #     id = request.GET["delete"]
+    #     models.Event.objects.filter(id=id).delete()
+    #     return redirect("/errands/")
+    # else:
+    # Simply load errands for rendering
+    table_data = models.Event.objects.filter(is_errand=True, user=request.user)
+    context = {"table_data": table_data}
+    return render(request, "errands.html", context)
 
+@login_required()
+def delete_errand(request, pk):
+    prod = models.Event.objects.get(id=pk)
+    prod.delete()
+    messages.success(request, "errand deleted successfully")
+    return redirect('/errands')
 
 # Add errand
 @login_required()

@@ -20,7 +20,7 @@
             <th>Duration</th>
             <th></th>
         </tr>
-        {% for row in page_data %}
+        {% for row in table_data %}
             <tr>
                 <td>{{ row.title }}</td>
                 <td>{{ row.priority }}</td>
@@ -28,7 +28,9 @@
                 <td>{{ row.duration }} min</td>
                 <td>
                     <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a class="btn btn-primary" href="#" onclick="confirmDeleteModal({{ row.id }})">Delete</a>
+                    <!-- delete button -->
+                    <a href="{% url 'nothing' row.id %}" class="btn btn-primary">Delete</a> 
+                    <!-- <a class="btn btn-primary" href="#" onclick="confirmDeleteModal({{ row.id }})">Delete</a> -->
                 </td>
             </tr>
         {% endfor %}
