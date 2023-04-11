@@ -52,8 +52,7 @@ def user_login(request):
                 return HttpResponse("Your account is not active.")
         else:
             print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(
-                username, password))
+            print("They used username: {} and password: {}".format(username, password))
             return render(request, "login.html", {"login_form": LoginForm})
     else:
         # Nothing has been provided for username or password.
@@ -181,9 +180,25 @@ def calendar(request):
 
 @login_required()
 def errands(request):
+    # if request.method == "GET" and "delete" in request.GET:
+    #     # User has deleted an errand
+    #     id = request.GET["delete"]
+    #     models.Event.objects.filter(id=id).delete()
+    #     return redirect("/errands/")
+    # else:
+    # Simply load errands for rendering
     table_data = models.Event.objects.filter(is_errand=True, user=request.user)
     context = {"table_data": table_data}
     return render(request, "errands.html", context)
+
+
+@login_required()
+def delete_errand(request, pk):
+    prod = models.Event.objects.get(id=pk)
+    prod.delete()
+    messages.success(request, "errand deleted successfully")
+    return redirect("/errands")
+
 
 # Add errand
 @login_required()
@@ -250,12 +265,3 @@ def editErrand(request, id):
         else:
             # Cancel
             return redirect("/errands/")
-
-
-# This the the function to delete the errand
-@login_required()
-def delete_errand(request, pk):
-    prod = models.Event.objects.get(id=pk)
-    prod.delete()
-    messages.success(request, "errand deleted successfully")
-    return redirect('/errands')
