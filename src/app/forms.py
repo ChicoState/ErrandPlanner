@@ -36,18 +36,18 @@ class ErrandForm(forms.ModelForm):
         max_length=20,
         strip=True,
         label="Title",
-        widget=forms.TextInput(attrs={"placeholder": "shopping"}),
+        widget=forms.TextInput(attrs={"placeholder": "Grocery Shop"}),
     )
     priority = forms.IntegerField(
         label="Priority",
-        widget=forms.TextInput(attrs={"placeholder": "0 is highest priority"}),
+        widget=forms.TextInput(attrs={"placeholder": "1"}),
         validators=[],
     )
     streetaddr = forms.CharField(
         max_length=20,
         strip=True,
         label="Street Address",
-        widget=forms.TextInput(attrs={"placeholder": "123 Sesame Street"}),
+        widget=forms.TextInput(attrs={"placeholder": "1234 Sesame Street"}),
         validators=[validators.MinLengthValidator(6)],
     )
     city = forms.CharField(

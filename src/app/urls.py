@@ -11,9 +11,9 @@ urlpatterns = [
     path("calendar/", views.calendar),
     path("calendar/add/", views.addEvent),
     path("", views.errands),
-    path("<str:pk>", views.delete_errand, name="nothing"),
     path("errands/", views.errands),
-    path("errands/<str:pk>", views.delete_errand, name="nothing"),
     path("errands/add/", views.addErrand),
     path("errands/edit/<int:id>/", views.editErrand),
+    path("errands/<str:pk>", views.delete_errand, name="nothing"),
+    path("<str:pk>", views.delete_errand, name="nothing"),
 ]
