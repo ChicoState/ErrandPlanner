@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'AddEvent' %}">Add Event</a>
+    </li>
+{% endblock navigation %}
 {% block content %}
     <div class="row align-items-start">
         {% for d in schedule %}
@@ -8,11 +13,11 @@
                 </div>
                 {% for e in d.events %}
                     <div class="text-bg-secondary m-2 p-1">
-                        <div>{{ e.start }}  - {{ e.end }}</div>
+                        <div>{{ e.start }} - {{ e.end }}</div>
                         <div>{{ e.title }}</div>
                     </div>
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
-{% endblock %}
+{% endblock content %}
