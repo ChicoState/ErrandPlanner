@@ -128,17 +128,17 @@ def calendar(request):
     thursday = Date()
     friday = Date()
     saturday = Date()
-    monday.date = monday.date + timedelta(days=1)
+    monday.date = sunday.date + timedelta(days=1)
     monday.day = "Monday"
-    tuesday.date = monday.date + timedelta(days=2)
+    tuesday.date = sunday.date + timedelta(days=2)
     tuesday.day = "Tuesday"
-    wednesday.date = monday.date + timedelta(days=3)
+    wednesday.date = sunday.date + timedelta(days=3)
     wednesday.day = "Wednesday"
-    thursday.date = monday.date + timedelta(days=4)
+    thursday.date = sunday.date + timedelta(days=4)
     thursday.day = "Thursday"
-    friday.date = monday.date + timedelta(days=5)
+    friday.date = sunday.date + timedelta(days=5)
     friday.day = "Friday"
-    saturday.date = monday.date + timedelta(days=6)
+    saturday.date = sunday.date + timedelta(days=6)
     saturday.day = "Saturday"
 
     # get all of the events that would be in the current week

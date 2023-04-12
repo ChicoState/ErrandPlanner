@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import datetime
 
 
 # Event model
@@ -15,7 +17,7 @@ class Event(models.Model):
     zip = models.SmallIntegerField()  # more for last 4?
     # time variables
     # can be left blank (alternatively we could assign a default value)
-    start = models.DateTimeField(blank=True, null=True)
+    start = models.DateTimeField(blank=True, null=True, default=timezone.now())
     duration = models.IntegerField(blank=True)
     # Used to determine if a modell is an errand or a regular event
     is_errand = models.BooleanField(default=False)
