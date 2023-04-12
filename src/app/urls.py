@@ -5,14 +5,13 @@ from . import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("join/", views.join),
-    path("login/", views.user_login),
-    path("calendar/", views.calendar),
-    path("calendar/add/", views.addEvent),
-    path("", views.errands),
-    path("errands/", views.errands),
-    path("errands/add/", views.addErrand),
+    path("join/", views.join, name="Join"),
+    path("login/", views.user_login, name="Login"),
+    path("calendar/", views.calendar, name="Calendar"),
+    path("calendar/add/", views.addEvent, name="AddEvent"),
+    path("", views.errands, name="Home"),
+    path("errands/", views.errands, name="Errands"),
+    path("errands/add/", views.addErrand, name="AddErrand"),
     path("errands/edit/<int:id>/", views.editErrand),
-    path("errands/<str:pk>", views.delete_errand, name="nothing"),
-    path("<str:pk>", views.delete_errand, name="nothing"),
+    path("errands/<str:pk>", views.delete_errand, name="DeleteErrand"),
 ]
