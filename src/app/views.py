@@ -257,6 +257,8 @@ def editErrand(request, id):
                 errand = form.save(commit=False)
                 errand.user = request.user
                 errand.id = id
+                errand.is_errand = True
+                errand.scheduled = False
                 errand.save()
                 return redirect("/errands/")
             else:
