@@ -28,7 +28,7 @@
                 <td>{{ row.duration }} min</td>
                 <td>
                     <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a class="btn btn-primary" href="#" onclick="confirmDeleteModal({{ row.id }})">Delete</a>
+                    <a href="{% url 'nothing' row.id %}" class="btn btn-primary">Delete</a> 
                 </td>
             </tr>
         {% endfor %}

@@ -12,6 +12,7 @@ urlpatterns = [
     path("", views.errands),
     path("errands/", views.errands),
     path("errands/add/", views.addErrand),
-    # path('errands/edit/', views.editErrand),
     path("errands/edit/<int:id>/", views.editErrand),
+    path("errands/<str:pk>", views.delete_errand, name="nothing"),
+    path("<str:pk>", views.delete_errand, name="nothing"),
 ]
