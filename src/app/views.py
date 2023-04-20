@@ -186,8 +186,12 @@ def errands(request):
     #     models.Event.objects.filter(id=id).delete()
     #     return redirect("/errands/")
     # else:
-    # Simply load errands for rendering
-    table_data = models.Event.objects.filter(is_errand=True, user=request.user)
+    # Simply load errands for rendering (sorted by priority)
+    table_data = (
+        models.Event.objects.filter(is_errand=True, user=request.user)
+        .order_by("priority")
+        .values()
+    )
     context = {"table_data": table_data}
     return render(request, "errands.html", context)
 
@@ -215,6 +219,7 @@ def addErrand(request):
                 state = add_form.cleaned_data["state"]
                 zip = add_form.cleaned_data["zip"]
                 duration = add_form.cleaned_data["duration"]
+                deadline = add_form.cleaned_data["deadline"]
                 user = User.objects.get(id=request.user.id)
                 models.Event(
                     user=user,
@@ -225,6 +230,7 @@ def addErrand(request):
                     state=state,
                     zip=zip,
                     duration=duration,
+                    deadline=deadline,
                     is_errand=True,
                     scheduled=False,
                 ).save()
