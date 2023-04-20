@@ -187,7 +187,11 @@ def errands(request):
     #     return redirect("/errands/")
     # else:
     # Simply load errands for rendering (sorted by priority)
-    table_data = models.Event.objects.filter(is_errand=True, user=request.user).order_by('priority').values()
+    table_data = (
+        models.Event.objects.filter(is_errand=True, user=request.user)
+        .order_by("priority")
+        .values()
+    )
     context = {"table_data": table_data}
     return render(request, "errands.html", context)
 
