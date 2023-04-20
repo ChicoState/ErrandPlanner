@@ -77,12 +77,21 @@ class ErrandForm(forms.ModelForm):
     deadline = forms.DateTimeField(
         label="Deadline",
         widget=forms.TextInput(attrs={"placeholder": "10/31/2023 13:15:00"}),
-        required=False
+        required=False,
     )
 
     class Meta:
         model = Event
-        fields = ("title", "priority", "streetaddr", "city", "state", "zip", "duration", "deadline")
+        fields = (
+            "title",
+            "priority",
+            "streetaddr",
+            "city",
+            "state",
+            "zip",
+            "duration",
+            "deadline",
+        )
 
 
 class EventForm(forms.ModelForm):
