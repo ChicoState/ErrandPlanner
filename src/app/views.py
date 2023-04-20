@@ -215,6 +215,7 @@ def addErrand(request):
                 state = add_form.cleaned_data["state"]
                 zip = add_form.cleaned_data["zip"]
                 duration = add_form.cleaned_data["duration"]
+                deadline = add_form.cleaned_data["deadline"]
                 user = User.objects.get(id=request.user.id)
                 models.Event(
                     user=user,
@@ -225,6 +226,7 @@ def addErrand(request):
                     state=state,
                     zip=zip,
                     duration=duration,
+                    deadline=deadline,
                     is_errand=True,
                     scheduled=False,
                 ).save()

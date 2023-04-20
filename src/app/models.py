@@ -17,6 +17,7 @@ class Event(models.Model):
     # can be left blank (alternatively we could assign a default value)
     start = models.DateTimeField(blank=True, null=True)
     duration = models.IntegerField(blank=True)
+    deadline = models.DateTimeField(blank=True, null=True)
     # Used to determine if a modell is an errand or a regular event
     is_errand = models.BooleanField(default=False)
     scheduled = models.BooleanField(default=True)
