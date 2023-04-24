@@ -1,9 +1,7 @@
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from datetime import datetime, timedelta
 from . import models
-from app.forms import ErrandForm, EventForm
+from app.forms import ErrandForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from authlib.integrations.django_client import OAuth
@@ -16,7 +14,9 @@ oauth = OAuth()
 oauth.register(
     name="google",
     server_metadata_url=CONF_URL,
-    client_kwargs={"scope": "openid email profile"},
+    client_kwargs={
+        "scope": "openid email profile  https://www.googleapis.com/auth/calendar.events  https://www.googleapis.com/auth/calendar.readonly"
+    },
 )
 
 
