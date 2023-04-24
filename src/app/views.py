@@ -1,62 +1,33 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
 from . import models
-from app.forms import JoinForm, LoginForm, ErrandForm, EventForm
+from app.forms import ErrandForm, EventForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from authlib.integrations.django_client import OAuth
 
 # Create your views here.
 
-
-def join(request):
-    if request.method == "POST":
-        join_form = JoinForm(request.POST)
-        if join_form.is_valid():
-            user = join_form.save()  # Save form data to DB
-            user.set_password(user.password)  # Encrypt the password
-            user.save()  # Save encrypted password to DB
-            # Success! Redirect to home page.
-            return redirect("/")
-        else:
-            # Form invalid, print errors to console
-            context = {"join_form": join_form}
-            return render(request, "join.html", context)
-    else:
-        join_form = JoinForm()
-        context = {"join_form": join_form}
-        return render(request, "join.html", context)
+CONF_URL = "https://accounts.google.com/.well-known/openid-configuration"
+oauth = OAuth()
+oauth.register(
+    name="google",
+    server_metadata_url=CONF_URL,
+    client_kwargs={"scope": "openid email profile"},
+)
 
 
-def user_login(request):
-    if request.method == "POST":
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            # First get the username and password supplied
-            username = login_form.cleaned_data["username"]
-            password = login_form.cleaned_data["password"]
-            # Django's built-in authentication function:
-            user = authenticate(username=username, password=password)
-            # If we have a user
-            if user:
-                # Check if the account is active
-                if user.is_active:
-                    login(request, user)  # Log the user in.
-                    # Send the user back to homepage
-                    return redirect("/")
-            else:
-                # If account is not active:
-                return HttpResponse("Your account is not active.")
-        else:
-            print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(username, password))
-            return render(request, "login.html", {"login_form": LoginForm})
-    else:
-        # Nothing has been provided for username or password.
-        return render(request, "login.html", {"login_form": LoginForm})
+def login(request):
+    redirect_uri = request.build_absolute_uri(reverse("auth"))
+    return oauth.google.authorize_redirect(request, redirect_uri)
+
+
+def auth(request):
+    token = oauth.google.authorize_access_token(request)
+    request.session["user"] = token["userinfo"]
+    return redirect("/")
 
 
 ## Calendar Views ##
