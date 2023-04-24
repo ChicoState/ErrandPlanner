@@ -5,10 +5,9 @@ from . import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("login/", views.login, name="Login"),
+    path("login/", views.login, name="login"),
+    path("logout/", views.logout, name="logout"),
     path("auth/", views.auth, name="auth"),
-    path("calendar/", views.calendar, name="Calendar"),
-    path("calendar/add/", views.addEvent, name="AddEvent"),
     path("", views.errands, name="Home"),
     path("errands/", views.errands, name="Errands"),
     path("errands/add/", views.addErrand, name="AddErrand"),
