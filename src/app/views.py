@@ -52,7 +52,8 @@ def user_login(request):
                 return HttpResponse("Your account is not active.")
         else:
             print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(username, password))
+            print("They used username: {} and password: {}".format(
+                username, password))
             return render(request, "login.html", {"login_form": LoginForm})
     else:
         # Nothing has been provided for username or password.
@@ -180,22 +181,13 @@ def calendar(request):
 
 @login_required()
 def errands(request):
-    # if request.method == "GET" and "delete" in request.GET:
-    #     # User has deleted an errand
-    #     id = request.GET["delete"]
-    #     models.Event.objects.filter(id=id).delete()
-    #     return redirect("/errands/")
-    # else:
-    # Simply load errands for rendering (sorted by priority)
     table_data_todo = (
-        models.Event.objects.filter(is_errand=True, completed=False, user=request.user)
-        .order_by("priority")
-        .values()
+        models.Event.objects.filter(
+            is_errand=True, completed=False, user=request.user).order_by("priority").values()
     )
     table_data_complete = (
-        models.Event.objects.filter(is_errand=True, completed=True, user=request.user)
-        .order_by("priority")
-        .values()
+        models.Event.objects.filter(
+            is_errand=True, completed=True, user=request.user).order_by("priority").values()
     )
     context = {
         "table_data_todo": table_data_todo,
