@@ -21,7 +21,8 @@ class Event(models.Model):
     # Used to determine if a modell is an errand or a regular event
     is_errand = models.BooleanField(default=False)
     scheduled = models.BooleanField(default=True)
-    completed = models.BooleanField(default=False)
+    is_completed = models.BooleanField(default=False)
+    time_completed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         strRep = (

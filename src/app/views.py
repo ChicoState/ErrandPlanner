@@ -188,13 +188,17 @@ def errands(request):
     # else:
     # Simply load errands for rendering (sorted by priority)
     table_data_todo = (
-        models.Event.objects.filter(is_errand=True, completed=False, user=request.user)
+        models.Event.objects.filter(
+            is_errand=True, is_completed=False, user=request.user
+        )
         .order_by("priority")
         .values()
     )
     table_data_complete = (
-        models.Event.objects.filter(is_errand=True, completed=True, user=request.user)
-        .order_by("priority")
+        models.Event.objects.filter(
+            is_errand=True, is_completed=True, user=request.user
+        )
+        .order_by("time_completed")
         .values()
     )
     context = {
@@ -241,7 +245,8 @@ def addErrand(request):
                     deadline=deadline,
                     is_errand=True,
                     scheduled=False,
-                    completed=False,
+                    is_completed=False,
+                    time_completed=datetime.now(),
                 ).save()
                 return redirect("/errands/")
             else:
@@ -290,10 +295,11 @@ def editErrand(request, id):
 def completeErrand(request, id):
     if request.method == "GET":
         errand = models.Event.objects.get(id=id)
-        if errand.completed:
-            errand.completed = False
+        if errand.is_completed:
+            errand.is_completed = False
             errand.save()
         else:
-            errand.completed = True
+            errand.is_completed = True
+            errand.time_completed = datetime.now()
             errand.save()
     return redirect("/errands/")
