@@ -183,11 +183,17 @@ def calendar(request):
 def errands(request):
     table_data_todo = (
         models.Event.objects.filter(
-            is_errand=True, completed=False, user=request.user).order_by("priority").values()
+            is_errand=True, is_completed=False, user=request.user
+        )
+        .order_by("priority")
+        .values()
     )
     table_data_complete = (
         models.Event.objects.filter(
-            is_errand=True, completed=True, user=request.user).order_by("priority").values()
+            is_errand=True, is_completed=True, user=request.user
+        )
+        .order_by("time_completed")
+        .values()
     )
     context = {
         "table_data_todo": table_data_todo,
@@ -233,7 +239,8 @@ def addErrand(request):
                     deadline=deadline,
                     is_errand=True,
                     scheduled=False,
-                    completed=False,
+                    is_completed=False,
+                    time_completed=datetime.now(),
                 ).save()
                 return redirect("/errands/")
             else:
@@ -282,10 +289,11 @@ def editErrand(request, id):
 def completeErrand(request, id):
     if request.method == "GET":
         errand = models.Event.objects.get(id=id)
-        if errand.completed:
-            errand.completed = False
+        if errand.is_completed:
+            errand.is_completed = False
             errand.save()
         else:
-            errand.completed = True
+            errand.is_completed = True
+            errand.time_completed = datetime.now()
             errand.save()
     return redirect("/errands/")
