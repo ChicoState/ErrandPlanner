@@ -180,13 +180,6 @@ def calendar(request):
 
 @login_required()
 def errands(request):
-    # if request.method == "GET" and "delete" in request.GET:
-    #     # User has deleted an errand
-    #     id = request.GET["delete"]
-    #     models.Event.objects.filter(id=id).delete()
-    #     return redirect("/errands/")
-    # else:
-    # Simply load errands for rendering (sorted by priority)
     table_data_todo = (
         models.Event.objects.filter(
             is_errand=True, is_completed=False, user=request.user

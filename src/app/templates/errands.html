@@ -7,103 +7,122 @@
     <link rel="stylesheet" href="{% static 'errands.css' %}" />
 </head>
 
-<body>
-    <div class="jumbotron">
-        <!--Table of errands-->
-        <h1>Errands</h1>
-        {% if not table_data_todo %}
-        </p>
-        There are no errands to display.
-        </p>
-        {% else %}
-        <table class="table table-striped" border="1">
-            <tr>
-                <th>Errand</th>
-                <th>Priority</th>
-                <th>Address</th>
-                <th>Duration</th>
-                <th>Deadline</th>
-                <th>Complete</th>
-                <th></th>
-            </tr>
-            {% for row in table_data_todo %}
-            <tr>
-                <td>{{ row.title }}</td>
-                <td>{{ row.priority }}</td>
-                <td>
-                    {{ row.streetaddr }}
-                    </br>
-                    {{ row.city }}, {{ row.state }} {{ zip }}
-                </td>
-                <td>{{ row.duration }} min</td>
-                <td>
-                    {{ row.deadline.date }}
-                    </br>
-                    {{ row.deadline.time }}
-                </td>
-                <td>
-                    <a href="/errands/completed/{{ row.id }}">No</a>
-                </td>
-                <td>
-                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a href="{% url 'DeleteErrand' row.id %}" class="btn btn-primary">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
-        <form method="GET" action="/errands/add/">
-            <input type="submit" class="btn btn-primary" value="Add Errand">
-        </form>
-        </br></br></br></br></br>
-        <!--Table of completed errands-->
-        <h1>Completed Errands</h1>
-        {% if not table_data_complete %}
-        </p>
-        Completed errands will be displayed here.
-        </p>
-        {% else %}
-        <table class="table table-striped" border="1">
-            <tr>
-                <th>Errand</th>
-                <th>Priority</th>
-                <th>Address</th>
-                <th>Duration</th>
-                <th>Deadline</th>
-                <th>Complete</th>
-                <th></th>
-            </tr>
-            {% for row in table_data_complete %}
-            <tr>
-                <td>{{ row.title }}</td>
-                <td>{{ row.priority }}</td>
-                <td>
-                    {{ row.streetaddr }}
-                    </br>
-                    {{ row.city }}, {{ row.state }} {{ zip }}
-                </td>
-                <td>{{ row.duration }} min</td>
-                <td>
-                    {{ row.deadline.date }}
-                    </br>
-                    {{ row.deadline.time }}
-                </td>
-                <td>
-                    <a href="/errands/completed/{{ row.id }}">Yes</a>
-                </td>
-                <td>
-                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a href="{% url 'DeleteErrand' row.id %}" class="btn btn-primary">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <p>
-            Editing a completed errand will push it back up into the "To do" errand list.
-        </p>
-        {% endif %}
 
+<body>
+    <!-- this should be the errands -->
+    <!-- <div class="jumbotron"> -->
+    <div class="container">
+        <div class="row no-gutters">
+            <!--Table of errands-->
+            <div class="col ">
+                <h1>Errands</h1>
+                <form method="GET" action="/errands/add/">
+                    <input type="submit" class="btn btn-primary" value="Add Errand">
+                </form>
+                {% if not table_data_todo %}
+                </p>
+                There are no errands to display.
+                </p>
+                {% else %}
+                <table class="table table-striped" border="1">
+                    <tr>
+                        <th>Errand</th>
+                        <th>Priority</th>
+                        <th>Address</th>
+                        <th>Duration</th>
+                        <th>Deadline</th>
+                        <th>Complete</th>
+                        <th>Options</th>
+                    </tr>
+                    {% for row in table_data_todo %}
+                    <tr>
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.priority }}</td>
+                        <td>
+                            {{ row.streetaddr }}
+                            </br>
+                            {{ row.city }}, {{ row.state }} {{ zip }}
+                        </td>
+                        <td>{{ row.duration }} min</td>
+                        <td>
+                            {{ row.deadline.date }}
+                            </br>
+                            {{ row.deadline.time }}
+                        </td>
+                        <td>
+                            <a href="/errands/completed/{{ row.id }}"><button type="button"
+                                    class="btn btn-primary">Complete</button></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
+                            <a href="{% url 'DeleteErrand' row.id %}" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+               
+                </br></br></br></br></br>
+            </div>
+            <!-- end of errands -->
+
+
+
+            <!--Table of completed errands-->
+            <div class="col">
+                <h1>Completed Errands</h1>
+                {% if not table_data_complete %}
+                </p>
+                Completed errands will be displayed here.
+                </p>
+                <p>
+                    * Editing a completed errand will push it back up into the "To do" errand list.
+                </p>
+                {% else %}
+                <table class="table table-striped" border="1">
+                    <tr>
+                        <th>Errand</th>
+                        <th>Priority</th>
+                        <th>Address</th>
+                        <th>Duration</th>
+                        <th>Deadline</th>
+                        <th>Complete</th>
+                        <th>Options</th>
+                    </tr>
+                    {% for row in table_data_complete %}
+                    <tr>
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.priority }}</td>
+                        <td>
+                            {{ row.streetaddr }}
+                            </br>
+                            {{ row.city }}, {{ row.state }} {{ zip }}
+                        </td>
+                        <td>{{ row.duration }} min</td>
+                        <td>
+                            {{ row.deadline.date }}
+                            </br>
+                            {{ row.deadline.time }}
+                        </td>
+                        <td>
+                            <a href="/errands/completed/{{ row.id }}"><button type="button"
+                                    class="btn btn-primary">UnComplete</button></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
+                            <a href="{% url 'DeleteErrand' row.id %}" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- end of completed errands -->
+        </div>
     </div>
+    {% endif %}
+
+    <!-- </div> -->
+
     <!-- Modal -->
     <div id="deleteModal" class="modal fade" role='dialog'>
         <div class="modal-dialog">

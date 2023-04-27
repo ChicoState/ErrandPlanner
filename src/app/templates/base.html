@@ -10,8 +10,9 @@
 {% endblock bootstrap5_extra_head %}
 {% block bootstrap5_content %}
     {# Some pages will not use the navbar (forms), so we have an if #}
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
+    
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Home</a>
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'Errands' %}">Errands</a>
