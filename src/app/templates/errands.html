@@ -16,6 +16,9 @@
             <!--Table of errands-->
             <div class="col ">
                 <h1>Errands</h1>
+                <form method="GET" action="/errands/add/">
+                    <input type="submit" class="btn btn-primary" value="Add Errand">
+                </form>
                 {% if not table_data_todo %}
                 </p>
                 There are no errands to display.
@@ -48,7 +51,7 @@
                         </td>
                         <td>
                             <a href="/errands/completed/{{ row.id }}"><button type="button"
-                                    class="btn btn-primary">complete</button></a>
+                                    class="btn btn-primary">Complete</button></a>
                         </td>
                         <td>
                             <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
@@ -58,9 +61,7 @@
                     {% endfor %}
                 </table>
                 {% endif %}
-                <form method="GET" action="/errands/add/">
-                    <input type="submit" class="btn btn-primary" value="Add Errand">
-                </form>
+               
                 </br></br></br></br></br>
             </div>
             <!-- end of errands -->
