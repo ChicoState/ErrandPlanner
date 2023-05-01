@@ -25,10 +25,10 @@ oauth.register(
 # Function decorator that checks whether there is an active user
 def auth_required(func):
     @wraps(func)
-    def wrapper(request):
+    def wrapper(request, *args, **kwargs):
         user = request.session.get("user")
         if user:
-            return func(request)
+            return func(request, *args, **kwargs)
         else:
             return redirect("/login")
 
@@ -112,7 +112,7 @@ def addErrand(request):
                     deadline=deadline,
                     scheduled=False,
                     is_completed=False,
-                    time_completed=datetime.now(),
+                    time_completed=datetime.datetime.now(),
                 ).save()
                 return redirect("/errands/")
             else:
@@ -140,7 +140,7 @@ def editErrand(request, id):
             form = ErrandForm(request.POST)
             if form.is_valid():
                 errand = form.save(commit=False)
-                errand.user = request.user
+                errand.user = request.session.get("user")["email"]
                 errand.id = id
                 errand.scheduled = False
                 # errand.completed = False
@@ -164,6 +164,6 @@ def completeErrand(request, id):
             errand.save()
         else:
             errand.is_completed = True
-            errand.time_completed = datetime.now()
+            errand.time_completed = datetime.datetime.now()
             errand.save()
     return redirect("/errands/")
