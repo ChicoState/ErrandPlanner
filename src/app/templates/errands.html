@@ -33,7 +33,7 @@
                 <td>{{ row.duration }} min</td>
                 <td>
                     <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a href="{% url 'DeleteErrand' row.id %}" class="btn btn-primary">Delete</a>
+                    <a href="{% url 'delete_errand' row.id %}" class="btn btn-primary">Delete</a>
                 </td>
             </tr>
         {% endfor %}

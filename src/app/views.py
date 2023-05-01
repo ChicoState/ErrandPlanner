@@ -1,13 +1,17 @@
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from . import models
+from . import models, utils
 from app.forms import ErrandForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from authlib.integrations.django_client import OAuth
 from functools import wraps
+import os, datetime
 
 # Create your views here.
+
+AUTH_REDIRECT_URI = os.getenv("AUTH_REDIRECT_URI")
+print(AUTH_REDIRECT_URI)
 
 CONF_URL = "https://accounts.google.com/.well-known/openid-configuration"
 oauth = OAuth()
@@ -34,7 +38,7 @@ def auth_required(func):
 
 
 def login(request):
-    redirect_uri = "http://127.0.0.1:8000/auth/"  # TODO: Change URL to match what works
+    redirect_uri = str(AUTH_REDIRECT_URI)
     return oauth.google.authorize_redirect(request, redirect_uri)
 
 
@@ -46,7 +50,7 @@ def logout(request):
 def auth(request):
     token = oauth.google.authorize_access_token(request)
     request.session["user"] = token["userinfo"]
-    print(request.session.get("user"))
+    request.session["token"] = token
     return redirect("/")
 
 
@@ -63,7 +67,7 @@ def errands(request):
 
 
 @auth_required
-def delete_errand(request, pk):
+def deleteErrand(request, pk):
     prod = models.Event.objects.get(id=pk)
     prod.delete()
     messages.success(request, "errand deleted successfully")
