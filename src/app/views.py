@@ -1,8 +1,6 @@
-from django.urls import reverse
 from django.shortcuts import render, redirect
 from . import models, utils
 from app.forms import ErrandForm
-from django.contrib.auth.models import User
 from django.contrib import messages
 from authlib.integrations.django_client import OAuth
 from functools import wraps
@@ -59,10 +57,21 @@ def auth(request):
 
 @auth_required
 def errands(request):
-    # Simply load errands for rendering
     email = request.session.get("user")["email"]
-    table_data = models.Event.objects.filter(user=email)
-    context = {"table_data": table_data}
+    table_data_todo = (
+        models.Event.objects.filter(is_completed=False, user=email)
+        .order_by("priority")
+        .values()
+    )
+    table_data_complete = (
+        models.Event.objects.filter(is_completed=True, user=email)
+        .order_by("time_completed")
+        .values()
+    )
+    context = {
+        "table_data_todo": table_data_todo,
+        "table_data_complete": table_data_complete,
+    }
     return render(request, "errands.html", context)
 
 
@@ -89,6 +98,7 @@ def addErrand(request):
                 state = add_form.cleaned_data["state"]
                 zip = add_form.cleaned_data["zip"]
                 duration = add_form.cleaned_data["duration"]
+                deadline = add_form.cleaned_data["deadline"]
                 user = request.session.get("user")["email"]
                 models.Event(
                     user=user,
@@ -99,7 +109,10 @@ def addErrand(request):
                     state=state,
                     zip=zip,
                     duration=duration,
+                    deadline=deadline,
                     scheduled=False,
+                    is_completed=False,
+                    time_completed=datetime.now(),
                 ).save()
                 return redirect("/errands/")
             else:
@@ -130,6 +143,7 @@ def editErrand(request, id):
                 errand.user = request.user
                 errand.id = id
                 errand.scheduled = False
+                # errand.completed = False
                 errand.save()
                 return redirect("/errands/")
             else:
@@ -138,3 +152,18 @@ def editErrand(request, id):
         else:
             # Cancel
             return redirect("/errands/")
+
+
+# Complete errand
+@auth_required
+def completeErrand(request, id):
+    if request.method == "GET":
+        errand = models.Event.objects.get(id=id)
+        if errand.is_completed:
+            errand.is_completed = False
+            errand.save()
+        else:
+            errand.is_completed = True
+            errand.time_completed = datetime.now()
+            errand.save()
+    return redirect("/errands/")

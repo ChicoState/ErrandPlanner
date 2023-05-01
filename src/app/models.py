@@ -15,7 +15,10 @@ class Event(models.Model):
     # can be left blank (alternatively we could assign a default value)
     start = models.DateTimeField(blank=True, null=True)
     duration = models.IntegerField(blank=True)
+    deadline = models.DateTimeField(blank=True, null=True)
     scheduled = models.BooleanField(default=True)
+    is_completed = models.BooleanField(default=False)
+    time_completed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         strRep = self.title + " (" + self.user + ")"

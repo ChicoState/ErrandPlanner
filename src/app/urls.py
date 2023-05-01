@@ -12,5 +12,6 @@ urlpatterns = [
     path("errands/", views.errands, name="errands"),
     path("errands/add/", views.addErrand, name="add_errand"),
     path("errands/edit/<int:id>/", views.editErrand),
+    path("errands/completed/<int:id>/", views.completeErrand),
     path("errands/<str:pk>", views.deleteErrand, name="delete_errand"),
 ]
