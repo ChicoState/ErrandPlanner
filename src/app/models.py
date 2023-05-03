@@ -1,11 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 # Event model
 class Event(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # id = models.SmallIntegerField(primary_key=True)
+    user = models.EmailField()
     title = models.CharField(max_length=20)
     priority = models.SmallIntegerField()
     # address fields
@@ -18,20 +16,12 @@ class Event(models.Model):
     start = models.DateTimeField(blank=True, null=True)
     duration = models.IntegerField(blank=True)
     deadline = models.DateTimeField(blank=True, null=True)
-    # Used to determine if a modell is an errand or a regular event
-    is_errand = models.BooleanField(default=False)
     scheduled = models.BooleanField(default=True)
     is_completed = models.BooleanField(default=False)
     time_completed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        strRep = (
-            ("Errand: " if self.is_errand else "Event: ")
-            + self.title
-            + " ("
-            + self.user.username
-            + ")"
-        )
+        strRep = self.title + " (" + self.user + ")"
         return strRep
 
     class Meta:
