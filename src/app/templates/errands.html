@@ -66,7 +66,7 @@
         <table class="table table-striped" border="1">
             <tr>
                 <th>Errand</th>
-                <th>Priority</th>
+                <th>Time Completed</th>
                 <th>Address</th>
                 <th>Duration</th>
                 <th>Deadline</th>
@@ -76,7 +76,11 @@
             {% for row in table_data_complete %}
             <tr>
                 <td>{{ row.title }}</td>
-                <td>{{ row.priority }}</td>
+                <td>
+                    {{ row.time_completed.date }}
+                    </br>
+                    {{ row.time_completed.time }}
+                </td>
                 <td>
                     {{ row.streetaddr }}
                     </br>
