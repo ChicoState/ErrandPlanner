@@ -28,7 +28,6 @@ def validate_location(value):
     if not value[0].isdigit():
         raise forms.ValidationError("Please enter a valid address.")
 
-
 # Errand entry form
 # ~~ validators still need work ~~
 class ErrandForm(forms.ModelForm):
@@ -37,42 +36,43 @@ class ErrandForm(forms.ModelForm):
         strip=True,
         label="Title",
         widget=forms.TextInput(attrs={"placeholder": "Grocery Shop"}),
+        validators=[validators.RegexValidator(regex='.*[a-zA-Z]+.*')],
     )
     priority = forms.IntegerField(
         label="Priority",
         widget=forms.TextInput(attrs={"placeholder": "1"}),
-        validators=[],
+        validators=[validators.RegexValidator(regex='\d{1,}')],
     )
     streetaddr = forms.CharField(
         max_length=20,
         strip=True,
         label="Street Address",
         widget=forms.TextInput(attrs={"placeholder": "1234 Sesame Street"}),
-        validators=[validators.MinLengthValidator(6)],
+        validators=[validators.MinLengthValidator(6)]#, validators.RegexValidator(regex='\d{1,}\w{1,}')],
     )
     city = forms.CharField(
         max_length=20,
         strip=True,
         label="City",
         widget=forms.TextInput(attrs={"placeholder": "Sunnyville"}),
-        validators=[validators.MinLengthValidator(3)],
+        validators=[validators.MinLengthValidator(3), validators.RegexValidator(regex='[a-zA-Z]{1,20}')],
     )
     state = forms.CharField(
         max_length=2,
         strip=True,
         label="State",
         widget=forms.TextInput(attrs={"placeholder": "CA"}),
-        validators=[validators.MaxLengthValidator(2)],
+        validators=[validators.MaxLengthValidator(2), validators.RegexValidator(regex='[a-zA-Z]{2}')],
     )
     zip = forms.IntegerField(
         label="Zip Code",
         widget=forms.TextInput(attrs={"placeholder": "85358"}),
-        validators=[],
+        validators=[validators.RegexValidator(regex='[0-9]*')],
     )
     duration = forms.IntegerField(
         label="Duration Est.",
         widget=forms.TextInput(attrs={"placeholder": ""}),
-        validators=[],
+        validators=[validators.RegexValidator(regex='\d{1,}')],
     )  # this needs to change depending on how date/time are handled
 
     class Meta:
