@@ -9,17 +9,17 @@
             crossorigin="anonymous"></script>
 {% endblock bootstrap5_extra_head %}
 {% block bootstrap5_content %}
-    {# Some pages will not use the navbar (forms), so we have an if #}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand">Errand Planner</a>
-            {% if user %}
-              <button class="btn btn-outline-danger" onclick="location.href = '{% url 'logout' %}'">Sign Out</button>
-            {% endif %}
-            </div>
-  </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">Errand Planner</a>
+        {% if user %}
+          <button class="btn btn-outline-light" onclick="location.href = '{% url 'logout' %}'">Sign Out</button>
+        {% endif %}
+        </div>
+</nav>
     <div class="container">
         {% block content %}
         {% endblock content %}
     </div>
 {% endblock bootstrap5_content %}
+    
