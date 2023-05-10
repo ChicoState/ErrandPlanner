@@ -17,7 +17,6 @@ def getGCal(request, oauth):
     ).content
     resp_str = resp_bytes.decode("utf-8")
     resp = json.loads(resp_str)
-    print(type(resp))
     return resp
 
 
