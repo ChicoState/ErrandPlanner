@@ -42,7 +42,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "app.apps.AppConfig",
     "django_bootstrap5",
+    #"django-nose",
 ]
+
+#TEST_RUNNER = "django-nose.NoseTestSuiteRunner"
+
+#NOSE_ARGS = [
+#    '--woth-coverage',
+#    '--cover-package=app',
+#]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
