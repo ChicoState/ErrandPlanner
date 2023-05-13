@@ -75,6 +75,44 @@ def errands(request):
     return render(request, "errands.html", context)
 
 
+def filterDates(oneEvent):
+    return oneEvent  # > datetime.datetime.now()
+
+
+@auth_required
+def schedule(request):
+    calendar = utils.getGCal(request, oauth)
+    now = datetime.datetime.now()
+    weekFromNow = now + datetime.timedelta(days=7)
+    eventList = []
+    # Grab only items in calendar that are in the upcoming week
+    for c in calendar["items"]:
+        if "start" and "end" and "summary" in dict.keys(c):
+            if "dateTime" in c["start"] and c["end"]:
+                # Gather event data
+                summary = c["summary"]
+                start = c["start"]["dateTime"]
+                end = c["end"]["dateTime"]
+
+                # Convert datetime strings to datetime type
+                start = start[:19]
+                end = end[:19]
+                start = now.strptime(start, "%Y-%m-%dT%H:%M:%S")
+                end = now.strptime(end, "%Y-%m-%dT%H:%M:%S")
+
+                # If the event is in the upcoming week, add it to the list
+                if start > now and start < weekFromNow:
+                    tempdictionary = {
+                        "start": datetime.datetime.strftime(start, "%Y-%m-%dT%H:%M:%S"),
+                        "end": datetime.datetime.strftime(end, "%Y-%m-%dT%H:%M:%S"),
+                        "summary": summary,
+                    }
+                    eventList.append(tempdictionary)
+    for e in eventList:
+        print(e)
+    return redirect("/errands/")
+
+
 @auth_required
 def deleteErrand(request, pk):
     prod = models.Event.objects.get(id=pk)
