@@ -75,17 +75,28 @@ def errands(request):
     return render(request, "errands.html", context)
 
 
-def filterDates(oneEvent):
-    return oneEvent  # > datetime.datetime.now()
+def timeInterval(now):
+    # Set values for start of day and end of day
+    startOfDay = datetime.datetime(now.year, now.month, now.day, 8, 0, 0, 0)  # 8am
+    endOfDay = datetime.datetime(now.year, now.month, now.day, 20, 0, 0, 0)  # 8pm
+    # If it's the end of the day, plan for tomorrow
+    if now > endOfDay:
+        startOfDay = startOfDay + datetime.timedelta(days=1)
+        endOfDay = endOfDay + datetime.timedelta(days=1)
+    # If we're planning in the middle of the day, start the day at "now"
+    elif now > startOfDay:
+        startOfDay = now
+    return startOfDay, endOfDay
 
 
-@auth_required
-def schedule(request):
+# Retrieves GCal events and returns simple list of event dictionaries for today's schedule()
+def todays_events(request):
     calendar = utils.getGCal(request, oauth)
     now = datetime.datetime.now()
-    weekFromNow = now + datetime.timedelta(days=7)
+    startOfDay, endOfDay = timeInterval(now)
+    # Fill the list of the day's events
     eventList = []
-    # Grab only items in calendar that are in the upcoming week
+    # Grab only items in calendar that are before end of day, and after start of day
     for c in calendar["items"]:
         if "start" and "end" and "summary" in dict.keys(c):
             if "dateTime" in c["start"] and c["end"]:
@@ -100,17 +111,73 @@ def schedule(request):
                 start = now.strptime(start, "%Y-%m-%dT%H:%M:%S")
                 end = now.strptime(end, "%Y-%m-%dT%H:%M:%S")
 
-                # If the event is in the upcoming week, add it to the list
-                if start > now and start < weekFromNow:
+                # If an event takes up the whole remaining day return only that
+                if start < startOfDay and end > endOfDay:
+                    temp = {"start": startOfDay, "end": endOfDay}
+                    return [temp]
+
+                # If the event overlaps the allotted time, add it to the list
+                if (start > startOfDay and start < endOfDay) or (
+                    end > startOfDay and end < endOfDay
+                ):
                     tempdictionary = {
-                        "start": datetime.datetime.strftime(start, "%Y-%m-%dT%H:%M:%S"),
-                        "end": datetime.datetime.strftime(end, "%Y-%m-%dT%H:%M:%S"),
+                        "start": start,  # datetime.datetime.strftime(start, "%Y-%m-%dT%H:%M:%S"),
+                        "end": end,  # datetime.datetime.strftime(end, "%Y-%m-%dT%H:%M:%S"),
                         "summary": summary,
                     }
                     eventList.append(tempdictionary)
+
+    return eventList, startOfDay, endOfDay
+
+
+@auth_required
+def schedule(request):
+    # eventList, now, weekFromNow = week_of_events(request)
+    eventList, startOfDay, endOfDay = todays_events(request)
+
+    # List of dictionaries representing gaps in schedule that errands can be done
+    gaps = [{"start": startOfDay, "end": endOfDay}]
     for e in eventList:
-        print(e)
-    return redirect("/errands/")
+        for g in gaps:
+            # Event starts during gap
+            if e["start"] > g["start"] and e["start"] < g["end"]:
+                # If the event ends after the gap, simply cut this gap shorter
+                if e["end"] > g["end"]:
+                    g["end"] = e["start"]
+                # Event bisects gap, cut this one short and create a gap after the event
+                else:
+                    # CHECK FOR GAP SIZES
+                    gTemp = {"start": e["end"], "end": g["end"]}
+                    g["end"] = e["start"]
+                    gaps.append(gTemp)
+            # Event starts before gap, but ends during
+            elif e["end"] > g["start"] and e["end"] < g["end"]:
+                g["start"] = e["end"]
+                # CHECK FOR GAP SIZE
+            # Event lasts whole duration of gap
+            elif e["start"] <= g["start"] and e["end"] >= g["end"]:
+                gaps.remove(g)
+    # Data for html use
+    gaps = sorted(gaps, key=lambda i: i["start"])
+    date = startOfDay.date
+    email = request.session.get("user")["email"]
+    table_data_todo = (
+        models.Event.objects.filter(is_completed=False, user=email)
+        .order_by("priority")
+        .values()
+    )
+    table_data_complete = (
+        models.Event.objects.filter(is_completed=True, user=email)
+        .order_by("time_completed")
+        .values()
+    )
+    context = {
+        "table_data_todo": table_data_todo,
+        "table_data_complete": table_data_complete,
+        "gaps": gaps,
+        "date": date,
+    }
+    return render(request, "errands.html", context)
 
 
 @auth_required

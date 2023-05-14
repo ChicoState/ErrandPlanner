@@ -116,14 +116,21 @@
             </div>
         </div>
         >>>>>>> Stashed changes
-        </br></br></br></br></br>
+        </br></br>
+        <!-- Gaps -->
+        {% if gaps %}
+        <h3 style="color: #FFFFFF;">Available times in your upcoming day: {{ date }}</h3>
+        {% for row in gaps %}
+        <p style="color: #FFFFFF;">{{row.start.time}} - {{row.end.time}}</p>
+        {% endfor %}
+        {% endif %}
+        </br></br>
         <!--Table of completed errands-->
         <h1 style="color: #FFFFFF; font-size: 45px; font-weight: bold; text-align: left;">Completed Errands</h1>
         {% if not table_data_complete %}
         <p style="color: #FFFFFF;">
             Completed errands will be displayed here.
         </p>
-
         {% else %}
         <table class="table table-striped" style="background-color: transparent; width: 100%;">
 
@@ -179,7 +186,7 @@
 
     </div>
     <!-- Modal -->
-    <div id="deleteModal" class="modal fade" role='dialog'>
+    <!-- <div id="deleteModal" class="modal fade" role='dialog'>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -196,4 +203,4 @@
             </div>
         </div>
     </div>
-    {% endblock content %}
+    {% endblock content %} -->
