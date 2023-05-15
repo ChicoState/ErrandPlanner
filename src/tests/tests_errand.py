@@ -76,13 +76,26 @@ class ErrandTestCase(TestCase):
         form = ErrandForm(data=formData)
         self.assertFalse(form.is_valid())
 
-    def test_add_errand_wrong_state(self):
+    def test_add_errand_wrong_state_type(self):
         formData = {
             "title": "test",
             "priority": 1,
             "streetaddr": "1234 nowhere lane",
             "city": "Chico",
             "state": 12,
+            "zip": 00000,
+            "duration": 5,
+        }
+        form = ErrandForm(data=formData)
+        self.assertFalse(form.is_valid())
+
+    def test_add_errand_wrong_state_length(self):
+        formData = {
+            "title": "test",
+            "priority": 1,
+            "streetaddr": "1234 nowhere lane",
+            "city": "Chico",
+            "state": "CAL",
             "zip": 00000,
             "duration": 5,
         }
