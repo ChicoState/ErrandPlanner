@@ -3,31 +3,6 @@ from django.core import validators
 from django.contrib.auth.models import User
 from app.models import Event
 
-
-class JoinForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"})
-    )
-    email = forms.CharField(widget=forms.TextInput(attrs={"size": "30"}))
-
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "username", "email", "password")
-        help_texts = {"username": None}
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
-
-
-# Errand validators
-# Bare bones check that street address starts with a number.
-# ~~ More functionality needed ~~
-def validate_location(value):
-    if not value[0].isdigit():
-        raise forms.ValidationError("Please enter a valid address.")
-
 # Errand entry form
 # ~~ validators still need work ~~
 class ErrandForm(forms.ModelForm):
@@ -74,10 +49,24 @@ class ErrandForm(forms.ModelForm):
         widget=forms.TextInput(attrs={"placeholder": ""}),
         validators=[validators.RegexValidator(regex='\d{1,}')],
     )  # this needs to change depending on how date/time are handled
+    deadline = forms.DateTimeField(
+        label="Deadline",
+        widget=forms.TextInput(attrs={"placeholder": "10/31/2023 13:15:00"}),
+        required=False,
+    )
 
     class Meta:
         model = Event
-        fields = ("title", "priority", "streetaddr", "city", "state", "zip", "duration")
+        fields = (
+            "title",
+            "priority",
+            "streetaddr",
+            "city",
+            "state",
+            "zip",
+            "duration",
+            "deadline",
+        )
 
 
 class EventForm(forms.ModelForm):
