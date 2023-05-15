@@ -25,8 +25,9 @@ class ErrandForm(forms.ModelForm):
         label="Street Address",
         widget=forms.TextInput(attrs={"placeholder": "1234 Sesame Street"}),
         validators=[
-            validators.MinLengthValidator(6)
-        ],  # , validators.RegexValidator(regex='\d{1,}\w{1,}')],
+            validators.MinLengthValidator(6),
+            validators.RegexValidator(regex="[0-9]{1,5}[a-zA-Z]*"),
+        ],
     )
     city = forms.CharField(
         max_length=20,
