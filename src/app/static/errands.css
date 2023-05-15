@@ -4,3 +4,8 @@ td {
     height: 48px;
     font-size: 24px;
 }
+/* Use Oswald font */
+body, button, input, select, textarea {
+    font-family: 'Oswald', sans-serif;
+}
+

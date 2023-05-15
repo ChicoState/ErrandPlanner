@@ -5,111 +5,188 @@
     {% load static %}
     <script src="{% static 'errands.js' %}"></script>
     <link rel="stylesheet" href="{% static 'errands.css' %}" />
+
+    <style>
+        body {
+            background-color: #2e2e2d;
+        }
+
+        /* Add styles to the table header row */
+        th {
+            background-color: #2e2e2d;
+            font-size: 18px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Add styles to the table data rows */
+        td {
+            border: none;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Add styles to the table container */
+        .table-container {
+            margin: 0px;
+        }
+
+        .btn-primary {
+            background-color: #2e2e2d;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="jumbotron">
         <!--Table of errands-->
-        <h1>Errands</h1>
+        </br>
+        <h1 style="color: #FFFFFF; font-size: 45px; font-weight: bold; text-align: left;">Upcoming Errands</h1>
         {% if not table_data_todo %}
-        </p>
-        There are no errands to display.
+        <p style="color: #FFFFFF;">
+            There are no errands to display.
         </p>
         {% else %}
-        <table class="table table-striped" border="1">
-            <tr>
-                <th>Errand</th>
-                <th>Priority</th>
-                <th>Address</th>
-                <th>Duration</th>
-                <th>Deadline</th>
-                <th>Complete</th>
-                <th></th>
+        <table class="table table-striped" style="background-color: transparent; width: 100%;">
+
+            <tr style="border: none;">
+                <th style="color: #FFFFFF;">Errand</th>
+                <th style="color: #FFFFFF;">Priority</th>
+                <th style="color: #FFFFFF;">Address</th>
+                <th style="color: #FFFFFF;">Duration</th>
+                <th style="color: #FFFFFF;">Deadline</th>
+                <th style="color: #FFFFFF;">Complete</th>
+                <th style="color: #FFFFFF;"></th>
             </tr>
             {% for row in table_data_todo %}
-            <tr>
-                <td>{{ row.title }}</td>
-                <td>{{ row.priority }}</td>
-                <td>
+            <tr style="border: none;">
+                <td style="color: #FFFFFF;">{{ row.title }}</td>
+                <td style="color: #FFFFFF;">{{ row.priority }}</td>
+                <td style="color: #FFFFFF;">
                     {{ row.streetaddr }}
                     </br>
                     {{ row.city }}, {{ row.state }} {{ zip }}
                 </td>
-                <td>{{ row.duration }} min</td>
-                <td>
+                <td style="color: #FFFFFF;">{{ row.duration }} min</td>
+                <td style="color: #FFFFFF;">
                     {{ row.deadline.date }}
                     </br>
                     {{ row.deadline.time }}
                 </td>
                 <td>
-                    <a href="/errands/completed/{{ row.id }}">No</a>
+                    <button onclick="toggleErrandStatus('{{ row.id }}', 'no')" class="btn btn-primary"
+                        style="border: 1px solid #FFFFFF;padding: 8px 16px;">
+                        <a href="/errands/completed/{{ row.id }}" style="color: #FFFFFF; text-decoration: none;">Yes</a>
+                    </button>
+
                 </td>
+
                 <td>
-                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a href="{% url 'delete_errand' row.id %}" class="btn btn-primary">Delete</a>
+                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}"
+                        style="background-color: #2e2e2d; color: #fff; border: 1px solid #fff;padding: 8px 16px;">Edit</a>
+                    <a href="{% url 'delete_errand' row.id %}" class="btn btn-primary"
+                        style="background-color: #2e2e2d; color: #fff; border: 1px solid #fff;padding: 8px 16px;">Delete</a>
                 </td>
+
             </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <form method="GET" action="/errands/add/">
-            <input type="submit" class="btn btn-primary" value="Add Errand">
-        </form>
-        </br></br></br></br></br>
+        <div class="row">
+            <div class="col-2">
+                <form method="GET" action="/errands/add/">
+                    <input type="submit" class="btn btn-secondary"
+                        style="background-color: transparent; border-color: #fff; padding: 5px 30px; font-size: 1.2em;"
+                        value="Add Errand">
+                </form>
+            </div>
+            <div class="col-10" align="right">
+                <form method="GET" action="/errands/schedule/">
+                    <input type="submit" class="btn btn-secondary"
+                        style="background-color: transparent; border-color: #fff; padding: 5px 30px; font-size: 1.2em;"
+                        value="Schedule My Errands">
+                </form>
+            </div>
+        </div>
+        >>>>>>> Stashed changes
+        </br></br>
+        <!-- Gaps -->
+        {% if gaps %}
+        <h3 style="color: #FFFFFF;">Available times in your upcoming day: {{ date }}</h3>
+        {% for row in gaps %}
+        <p style="color: #FFFFFF;">{{row.start.time}} - {{row.end.time}}</p>
+        {% endfor %}
+        {% endif %}
+        </br></br>
         <!--Table of completed errands-->
-        <h1>Completed Errands</h1>
+        <h1 style="color: #FFFFFF; font-size: 45px; font-weight: bold; text-align: left;">Completed Errands</h1>
         {% if not table_data_complete %}
-        </p>
-        Completed errands will be displayed here.
+        <p style="color: #FFFFFF;">
+            Completed errands will be displayed here.
         </p>
         {% else %}
-        <table class="table table-striped" border="1">
+        <table class="table table-striped" style="background-color: transparent; width: 100%;">
+
             <tr>
-                <th>Errand</th>
-                <th>Time Completed</th>
-                <th>Address</th>
-                <th>Duration</th>
-                <th>Deadline</th>
-                <th>Complete</th>
-                <th></th>
+                <th style="color: #FFFFFF;">Errand</th>
+                <th style="color: #FFFFFF;">Priority</th>
+                <th style="color: #FFFFFF;">Address</th>
+                <th style="color: #FFFFFF;">Duration</th>
+                <th style="color: #FFFFFF;">Deadline</th>
+                <th style="color: #FFFFFF;">Complete</th>
+                <th style="color: #FFFFFF;"></th>
             </tr>
             {% for row in table_data_complete %}
             <tr>
-                <td>{{ row.title }}</td>
-                <td>
-                    {{ row.time_completed.date }}
-                    </br>
-                    {{ row.time_completed.time }}
-                </td>
-                <td>
+                <td style="color: #FFFFFF;">{{ row.title }}</td>
+                <td style="color: #FFFFFF;">{{ row.priority }}</td>
+                <td style="color: #FFFFFF;">
                     {{ row.streetaddr }}
-                    </br>
+                    <br>
                     {{ row.city }}, {{ row.state }} {{ zip }}
                 </td>
-                <td>{{ row.duration }} min</td>
-                <td>
+                <td style="color: #FFFFFF;">{{ row.duration }} min</td>
+                <td style="color: #FFFFFF;">
                     {{ row.deadline.date }}
-                    </br>
+                    <br>
                     {{ row.deadline.time }}
                 </td>
                 <td>
-                    <a href="/errands/completed/{{ row.id }}">Yes</a>
+                    <button onclick="toggleErrandStatus('{{ row.id }}', 'yes')" class="btn btn-primary"
+                        style="border: none; border: 1px solid #FFFFFF; padding: 8px 16px;">
+                        <a href="/errands/completed/{{ row.id }}" style="color: #FFFFFF; text-decoration: none;">No</a>
+                    </button>
+
+
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/">Edit</a>
-                    <a href="{% url 'delete_errand' row.id %}" class="btn btn-primary">Delete</a>
+                    <a class="btn btn-primary" href="/errands/edit/{{ row.id }}/"
+                        style="background-color: #2e2e2d; color: #fff; border: 1px solid #fff;padding: 8px 16px;">Edit</a>
+                    <a href="{% url 'delete_errand' row.id %}" class="btn btn-primary"
+                        style="background-color: #2e2e2d; color: #fff; border: 1px solid #fff;padding: 8px 16px;">Delete</a>
                 </td>
+
+
+
             </tr>
             {% endfor %}
         </table>
-        <p>
+
+        <p style="color: #FFFFFF;">
             Editing a completed errand will push it back up into the "To do" errand list.
         </p>
         {% endif %}
 
     </div>
     <!-- Modal -->
-    <div id="deleteModal" class="modal fade" role='dialog'>
+    <!-- <div id="deleteModal" class="modal fade" role='dialog'>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -126,4 +203,4 @@
             </div>
         </div>
     </div>
-    {% endblock content %}
+    {% endblock content %} -->

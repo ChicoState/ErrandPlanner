@@ -1,3 +1,6 @@
+import json
+
+
 # Any GCal methods need to be passed the request and oauth from views.py
 
 
@@ -7,11 +10,14 @@ def getGCal(request, oauth):
     token = request.session.get("token")
     email = user["email"]
     url = "https://www.googleapis.com/calendar/v3/calendars/%s/events" % email
-    return oauth.google.get(
+    resp_bytes = oauth.google.get(
         url=url,
         token=token,
         request=request,
     ).content
+    resp_str = resp_bytes.decode("utf-8")
+    resp = json.loads(resp_str)
+    return resp
 
 
 # Pass through an event string such as "Appointment at Location from 10:30-12:00"

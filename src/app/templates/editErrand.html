@@ -1,20 +1,69 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    body {
+        background-color: #2e2e2d;
+        color: #fff;
+    }
+    table {
+        margin: 20px auto 0;
+        text-align: left;
+    }
+    table td:first-child {
+        padding-right: 20px;
+    }
+    table input {
+        width: 600px;
+        height: 50px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 0.25px solid #fff;
+        background-color: #3b3b3b;
+        color: #fff;
+        padding: 5px;
+    }
+    table input::placeholder {
+        color: #fff;
+        opacity: 0.5;
+    }
+    .btn-lg {
+        font-size: 20px;
+        padding: 10px 330px;
+        border: 2px solid #fff;
+        background-color: transparent;
+        color: #fff;
+    }
+    .btn-margin {
+        margin-top: 10px;
+    }
+    h1 {
+        margin-right: -50px;
+    }
+</style>
 <div class="jumbotron">
-    <h1>Edit Errand</h1>
+    <h1 style="color: #fff; font-size: 45px; font-weight: bold; text-align: center; margin-top: 20px;">Edit an Errand</h1>
     <form method="POST">
         {% csrf_token %}
         <table>
             {{ form_data.as_table }}
             <tr>
                 <td></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
                 <td>
-                    <a href="/errands/" class="btn btn-secondary">Cancel</a>
-                    <input type="submit" class="btn btn-primary" name="edit" value="Save">
+                    <a href="/errands/" class="btn btn-secondary btn-lg" style="width: 100%; border-color: #fff;">Cancel</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" class="btn btn-secondary btn-lg btn-margin" name="edit" value="Save"style="width: 100%; border-color: #fff;">
                 </td>
             </tr>
         </table>
     </form>
 </div>
 {% endblock %}
+
