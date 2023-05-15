@@ -1,0 +1,14 @@
+name: tests
+
+in:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: python3 ./src/manage.py test ./src/tests
