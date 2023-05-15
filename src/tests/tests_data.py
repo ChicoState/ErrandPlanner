@@ -94,6 +94,44 @@ class ClientTestCase(TestCase):
         gotten = models.Event.objects.filter(city="Chico")
         self.assertEqual(len(gotten), 1)
 
+    def test_Errand_edit(self):
+        email = "chicostudent@mail.csuchico.edu"
+        event = Event.objects.create(
+            user=email,
+            title="test",
+            priority=1,
+            streetaddr="1234 nowhere lane",
+            city="Chico",
+            state="CA",
+            zip=00000,
+            start=datetime.now(),
+            duration=5,
+            deadline=datetime.now(),
+            scheduled=True,
+            is_completed=False,
+        )
+        event.save()
+        formData = {
+            "title": "Changed",
+            "priority": 1,
+            "streetaddr": "1234 nowhere lane",
+            "city": "Chico",
+            "state": "CA",
+            "zip": 00000,
+            "duration": 5,
+        }
+        request = HttpRequest()
+        request.method = "POST"
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+        request.session["user"] = {"email": email}
+        request.POST = formData
+        request.POST["edit"] = formData
+        response = views.addErrand(request)
+        gotten = models.Event.objects.filter(title="Changed")
+        self.assertEqual(len(gotten), 1)
+
     def test_Errand_delete(self):
         email = "chicostudent@mail.csuchico.edu"
         event = Event.objects.create(
