@@ -79,7 +79,7 @@ def errands(request):
 def deleteErrand(request, pk):
     prod = models.Event.objects.get(id=pk)
     prod.delete()
-    #messages.success(request, "errand deleted successfully")
+    # messages.success(request, "errand deleted successfully")
     return redirect("/errands")
 
 

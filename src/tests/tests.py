@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from app.models import Event
 
+
 class ClientTestCase(TestCase):
     # Smoke Test
     def test_smoke(self):
@@ -11,7 +12,7 @@ class ClientTestCase(TestCase):
     def test_Event_str(self):
         email = "chicostudent@mail.csuchico.edu"
         event = Event.objects.create(
-            user = email,
+            user=email,
             title="test",
             priority=1,
             streetaddr="1234 nowhere lane",
