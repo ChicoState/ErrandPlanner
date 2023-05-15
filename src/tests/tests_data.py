@@ -128,7 +128,7 @@ class ClientTestCase(TestCase):
         request.session["user"] = {"email": email}
         request.POST = formData
         request.POST["edit"] = formData
-        response = views.addErrand(request)
+        response = views.editErrand(request, event.id)
         gotten = models.Event.objects.filter(title="Changed")
         self.assertEqual(len(gotten), 1)
 

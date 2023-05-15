@@ -27,3 +27,4 @@ class ClientTestCase(TestCase):
         )
         data = event.__str__()
         self.assertEqual(data, "test (" + email + ")")
+        
